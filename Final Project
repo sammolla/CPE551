@@ -1,0 +1,44 @@
+# GitHub API Project CPE551
+# Author Sam Molla
+# Date 12/16/2021
+# This program asks for the user to input a GitHub user and it will print their owned repositories and the number of commits for those repositories
+ 
+# Important Note: This is hitting the GitHub API, if you run the program too many times they will lock you out. Very frustrating to work on :(
+ 
+# Imports from external librares
+import requests
+import json
+ 
+# This line asks the user top input a GitHub user they want to search for
+searchingUser = input("Please enter a valid GitHub user that you would like to search for: ")
+ 
+# This is to define my function. We need an input from the user to make this function work
+def getGitHub(userInput):
+ 
+# This is where I connect to the GitHUb API and store the information in a txt format in a json file
+   
+    url = requests.get("https://api.github.com/users/"+userInput+"/repos")
+   
+    x = json.loads(url.text)
+ 
+# This is where I am setting up a dictionary for the information from the user to be stored
+    repos = []
+ 
+    i = 0
+ 
+    while i < len(x):
+ 
+        repos.append(x[i]['name'])
+ 
+        i = i + 1
+ 
+# This is where I am actually getting and filling the information in about the user
+    for repository in repos:
+       
+        commits = requests.get("https://api.github.com/repos/" + userInput + "/" + repository + "/commits")
+       
+        y = json.loads(commits.text)
+       
+        print('Repo: ' + repository + ' - Number of commits: ' + str(len(y)))  
+ 
+getGitHub(searchingUser)
